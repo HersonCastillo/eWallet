@@ -6,6 +6,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { HomeComponent } from './home/home.component';
+import { MongoService } from './mongo.service';
 
 const appRoutes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -25,7 +26,7 @@ const appRoutes: Routes = [
     FormsModule,
     ReactiveFormsModule
   ],
-  providers: [],
+  providers: [MongoService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
