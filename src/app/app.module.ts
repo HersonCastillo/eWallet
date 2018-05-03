@@ -7,6 +7,7 @@ import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { HomeComponent } from './home/home.component';
 import { MongoService } from './mongo.service';
+import { HttpClientModule } from "@angular/common/http";
 
 const appRoutes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -24,7 +25,8 @@ const appRoutes: Routes = [
     RouterModule.forRoot(appRoutes),
     BrowserModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    HttpClientModule
   ],
   providers: [MongoService],
   bootstrap: [AppComponent]
