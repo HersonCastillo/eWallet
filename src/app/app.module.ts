@@ -8,9 +8,12 @@ import { LoginComponent } from './login/login.component';
 import { HomeComponent } from './home/home.component';
 import { MongoService } from './mongo.service';
 import { HttpClientModule } from "@angular/common/http";
+import { RegistrarComponent } from './registrar/registrar.component';
 
 const appRoutes: Routes = [
   { path: 'login', component: LoginComponent },
+  { path: 'registrar', component: RegistrarComponent },
+  { path: 'home', component: HomeComponent },
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: '**', redirectTo: '/login', pathMatch: 'full' }
 ];
@@ -19,7 +22,8 @@ const appRoutes: Routes = [
   declarations: [
     AppComponent,
     LoginComponent,
-    HomeComponent
+    HomeComponent,
+    RegistrarComponent
   ],
   imports: [
     RouterModule.forRoot(appRoutes),
