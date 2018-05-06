@@ -1,0 +1,13 @@
+<div>
+  <form class="loginForm">
+    <mat-form-field>
+      <input name="username" type="text" matInput placeholder="Usuario" [(ngModel)]="user.username" autocomplete="off">
+    </mat-form-field>
+    <br>
+    <mat-form-field>
+      <input name="password" type="password" matInput placeholder="Contraseña" [(ngModel)]="user.password" autocomplete="off">
+    </mat-form-field>
+    <br>
+    <button mat-button (click)="btnLogin()">Iniciar sesión</button>
+  </form>
+</div>
