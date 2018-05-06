@@ -13,7 +13,7 @@ import {
   MatTabsModule,
   MatCardModule,
   MatChipsModule,
-  MatDialogModule
+  MatDialogModule,
 } from '@angular/material';
 
 import { MatProgressBarModule } from '@angular/material/progress-bar';

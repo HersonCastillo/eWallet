@@ -7,6 +7,9 @@
 var MongoClient = require("mongodb").MongoClient;
 var url = "mongodb://localhost:27017";
 var database = "tads";
+var collections = {
+    Usuarios: "usuarios"
+}
 var express = require("express");
 var sha1 = require('js-sha1');
 var app = express();
@@ -20,21 +23,11 @@ app.use((req, res, next) => {
 app.use(express.json());
 app.use(express.urlencoded());
 
-app.get('/usuarios', (req, res, next) => {
-    MongoClient.connect(url, (err, db) => {
-        if(err) console.error(err);
-        var $db = db.db(database);
-        $db.collection("usuarios").find({}).toArray((err, result) => {
-            res.send(result);
-        });
-        db.close();
-    });
-});
 app.post('/login', (req, res, next) => {
     MongoClient.connect(url, (err, db) => {
         if(err) console.log(err);
         var $db = db.db(database);
-        $db.collection("usuarios").find({
+        $db.collection(collections.Usuarios).find({
             username: req.body.user,
             password: sha1(req.body.pass)
         }).toArray((err, result) => {
@@ -46,9 +39,9 @@ app.post('/login', (req, res, next) => {
                 if(result.length > 0){
                     res.send({
                         success: "ok",
-                        status: 200
+                        status: 200,
+                        data: sha1(result[0].username + ':' + result[0].password)
                     });
-                    return;
                 } else res.send({
                     error: "Usuario no encontrado.",
                     status: 200
@@ -57,26 +50,30 @@ app.post('/login', (req, res, next) => {
         });
     });
 });
-app.post('/nuevousuario', (req, res, next) => {
+app.post('/validToken', (req, res, next) => {
     MongoClient.connect(url, (err, db) => {
         if(err) console.error(err);
-        var $db = db.db(database);
-        var usuario = {
-            id: req.body.id,
-            nombre: req.body.nombre
-        };
-        $db.collection("usuarios").insertOne(usuario, (err, result) => {
-            if(err) console.error(err);
-            else{
-                res.send({
-                    state: 200,
-                    msg: "Usuario insertado con éxito.",
-                    data: usuario,
-                    serverResult: result
+        else {
+            var $db = db.db(database);
+            var usuarios = [];
+            $db.collection(collections.Usuarios).find({}).toArray((err, response) => {
+                if(err) console.error(err);
+                else response.forEach(e => {
+                    usuarios.push(sha1(e.username + ':' + e.password));
+                    
                 });
-            }
-        });
-        db.close();
+                if(usuarios.length > 0){
+                    let result = false;
+                    usuarios.forEach(e => {
+                        if(e == req.body.token){
+                            result = true;
+                            return;
+                        }
+                    });
+                    res.send({ auth: result });
+                } else res.send({ auth: false });
+            });
+        }
     });
 });
 

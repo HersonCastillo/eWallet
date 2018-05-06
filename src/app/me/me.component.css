@@ -1,0 +1,19 @@
+.sidenav-container {
+  height: 100%;
+  top: 0px;
+  left: 0px;
+  margin: 0px;
+  padding: 0px;
+  width: 100%;
+  position: fixed;
+}
+.sidenav {
+  left: 0;
+  width: 350px;
+  box-shadow: 3px 0 6px rgba(0,0,0,.24);
+}
+
+html{
+  margin: 0 !important;
+  padding: 0 !important;
+}

@@ -27,7 +27,12 @@ export class LoginComponent {
     this.loginProvider.login(this.user.username, this.user.password).then(response => {
       if(response.error) this.openDialog("¡Ups!", response.error, () => this.dialog.closeAll());
       else if(response.success){
-        this.router.navigate(['home']);
+        this.router.navigateByUrl('/me');
+        localStorage.setItem("token", response.data);
+        localStorage.setItem("start_session", (new Date()).toString());
+        let last = new Date();
+        last.setHours(last.getHours() + 1);
+        localStorage.setItem("finish_session", last.toString());
       }
       else this.openDialog("Mmm...", "Algo malo ocurrió, intenta más tarde.", () => this.dialog.closeAll());
       this.loading = false;

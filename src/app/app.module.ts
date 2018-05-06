@@ -10,13 +10,18 @@ import { MaterialModule } from './material.module';
 import { HttpModule, Http } from '@angular/http';
 import { SimpleComponent } from './modals/simple/simple.component';
 import { ConfirmComponent } from './modals/confirm/confirm.component';
-import { HomeComponent } from './home/home.component';
+import { MeComponent } from './me/me.component';
+import { LayoutModule } from '@angular/cdk/layout';
+import { AuthGuardService } from './auth-guard.service';
+import { LoginGuardService } from './login-guard.service';
+import { RegistrarComponent } from './registrar/registrar.component';
 
 const appRoutes: Routes = [
-  { path: 'login', component: LoginComponent },
+  { path: 'login', component: LoginComponent, canActivate: [ LoginGuardService ] },
+  { path: 'me', component: MeComponent, canActivate: [AuthGuardService] },
+  { path: 'registrar', component: RegistrarComponent, canActivate: [LoginGuardService]  },
   { path: '', redirectTo: 'login', pathMatch: 'full' },
-  { path: '**', redirectTo: 'login', pathMatch: 'full' },
-  { path: 'home', component: HomeComponent }
+  { path: '**', redirectTo: 'login', pathMatch: 'full' }
 ];
 
 @NgModule({
@@ -25,7 +30,8 @@ const appRoutes: Routes = [
     LoginComponent,
     SimpleComponent,
     ConfirmComponent,
-    HomeComponent
+    MeComponent,
+    RegistrarComponent
   ],
   imports: [
     BrowserModule,
@@ -34,7 +40,8 @@ const appRoutes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     MaterialModule,
-    HttpModule
+    HttpModule,
+    LayoutModule,
   ],
   entryComponents:[
     SimpleComponent,
