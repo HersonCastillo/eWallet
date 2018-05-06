@@ -16,6 +16,8 @@ import {
   MatDialogModule
 } from '@angular/material';
 
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+
 @NgModule({
   imports: [
     CommonModule,
@@ -30,7 +32,8 @@ import {
     MatTabsModule,
     MatCardModule,
     MatChipsModule,
-    MatDialogModule
+    MatDialogModule,
+    MatProgressBarModule
   ],
   exports: [
     MatButtonModule,
@@ -43,7 +46,8 @@ import {
     MatTabsModule,
     MatCardModule,
     MatChipsModule,
-    MatDialogModule
+    MatDialogModule,
+    MatProgressBarModule
   ],
   declarations: []
 })

@@ -1,3 +1,16 @@
-<div style="font-family: Arial, Helvetica, sans-serif;">
-  {{getMessage()}}
+<div style="font-family: 'Roboto', arial, sans-serif; padding-left: 25px; padding-right: 25px; position: relative">
+  <div>
+    <label>
+      <h2>
+        &ensp; {{getTitle()}}
+      </h2>
+    </label>
+  </div>
+  <span>
+    <p>
+        {{getMessage()}}
+    </p>
+  </span>
+  <br><br><br>
+  <button mat-button (click)="Then()" style="position: absolute; right: 0px; bottom: 0px;"><b>ENTENDIDO</b></button>
 </div>

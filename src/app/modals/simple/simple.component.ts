@@ -6,10 +6,21 @@ import { Component, Inject } from '@angular/core';
 export class SimpleComponent {
   constructor(){}
   private static message: string;
+  private static title: string;
+
+  private static func: Function;
   public getMessage():string{
     return SimpleComponent.message;
   }
-  public static setMessage(msg: string): void{
+  public getTitle():string{
+    return SimpleComponent.title;
+  }
+  public Then(): void{
+    SimpleComponent.func();
+  }
+  public static setMessage(title: string, msg: string, fs: Function): void{
     SimpleComponent.message = msg;
+    SimpleComponent.title = title;
+    SimpleComponent.func = fs;
   }
 }

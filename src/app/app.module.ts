@@ -9,18 +9,23 @@ import { LoginComponent } from './login/login.component';
 import { MaterialModule } from './material.module';
 import { HttpModule, Http } from '@angular/http';
 import { SimpleComponent } from './modals/simple/simple.component';
+import { ConfirmComponent } from './modals/confirm/confirm.component';
+import { HomeComponent } from './home/home.component';
 
 const appRoutes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: '', redirectTo: 'login', pathMatch: 'full' },
-  { path: '**', redirectTo: 'login', pathMatch: 'full' }
+  { path: '**', redirectTo: 'login', pathMatch: 'full' },
+  { path: 'home', component: HomeComponent }
 ];
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    SimpleComponent
+    SimpleComponent,
+    ConfirmComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,
@@ -32,7 +37,8 @@ const appRoutes: Routes = [
     HttpModule
   ],
   entryComponents:[
-    SimpleComponent
+    SimpleComponent,
+    ConfirmComponent
   ],
   providers: [],
   bootstrap: [AppComponent]
