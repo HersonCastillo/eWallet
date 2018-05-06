@@ -60,7 +60,6 @@ app.post('/validToken', (req, res, next) => {
                 if(err) console.error(err);
                 else response.forEach(e => {
                     usuarios.push(sha1(e.username + ':' + e.password));
-                    
                 });
                 if(usuarios.length > 0){
                     let result = false;

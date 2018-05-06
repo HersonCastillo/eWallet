@@ -15,10 +15,20 @@ import { LayoutModule } from '@angular/cdk/layout';
 import { AuthGuardService } from './auth-guard.service';
 import { LoginGuardService } from './login-guard.service';
 import { RegistrarComponent } from './registrar/registrar.component';
+import { HomeComponent } from './me/components/home/home.component';
+import { IngresosComponent } from './me/components/ingresos/ingresos.component';
+import { EgresosComponent } from './me/components/egresos/egresos.component';
+import { ConfiguracionComponent } from './me/components/configuracion/configuracion.component';
 
 const appRoutes: Routes = [
   { path: 'login', component: LoginComponent, canActivate: [ LoginGuardService ] },
-  { path: 'me', component: MeComponent, canActivate: [AuthGuardService] },
+  { path: 'me', component: MeComponent, canActivate: [AuthGuardService], children: [
+    { path: '', redirectTo: 'home', pathMatch: 'full' },
+    { path: 'home', component: HomeComponent },
+    { path: 'ingresos', component: IngresosComponent },
+    { path: 'egresos', component: EgresosComponent },
+    { path: 'configuracion', component: ConfiguracionComponent }
+  ] },
   { path: 'registrar', component: RegistrarComponent, canActivate: [LoginGuardService]  },
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: '**', redirectTo: 'login', pathMatch: 'full' }
@@ -31,7 +41,11 @@ const appRoutes: Routes = [
     SimpleComponent,
     ConfirmComponent,
     MeComponent,
-    RegistrarComponent
+    RegistrarComponent,
+    HomeComponent,
+    IngresosComponent,
+    EgresosComponent,
+    ConfiguracionComponent
   ],
   imports: [
     BrowserModule,
