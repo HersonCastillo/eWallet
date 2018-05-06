@@ -1,30 +1,39 @@
-import { Component, OnInit } from '@angular/core';
-import { MongoService } from "../mongo.service";
+import { Component, Inject } from '@angular/core';
+import { LoginService } from '../services/login.service';
+import { MatDialog } from '@angular/material';
+import { SimpleComponent } from '../modals/simple/simple.component';
+import { ConfirmComponent } from '../modals/confirm/confirm.component';
+import { Router } from '@angular/router';
 
-declare var $;
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit {
-
-  constructor(private mongo: MongoService) { }
-
-  ngOnInit() {
-    console.log('works');
-    this.mongo.getUsuarios().then(r => {
-      console.log(r);
-    }).catch(err => {
-      console.error(err);
-    });
+export class LoginComponent {
+  constructor(private loginProvider: LoginService, private dialog: MatDialog, 
+  private router: Router) {}
+  openDialog(title: string, message: string, fs: Function): void{
+    SimpleComponent.setMessage(title, message, fs);
+    this.dialog.open(SimpleComponent);
   }
-  public insertUser(): void{
-    console.log('Insertando usuario');
-    this.mongo.setUsuario(Math.round(Math.random() * 100), "Mawio").then(response => {
-      console.log(response);
-    }).catch(err => {
-      console.error(err);
+  public user = {
+    username: "",
+    password: ""
+  };
+  public loading: boolean = false;
+  public btnLogin(): void{
+    this.loading = true;
+    this.loginProvider.login(this.user.username, this.user.password).then(response => {
+      if(response.error) this.openDialog("¡Ups!", response.error, () => this.dialog.closeAll());
+      else if(response.success){
+        this.router.navigate(['home']);
+      }
+      else this.openDialog("Mmm...", "Algo malo ocurrió, intenta más tarde.", () => this.dialog.closeAll());
+      this.loading = false;
+    }).catch(error => {
+      this.openDialog("¡Mal!", "Ocurrió un error al ejecutar el servicio.", () => this.dialog.closeAll());
+      this.loading = false;
     });
   }
 }

@@ -1,0 +1,17 @@
+<div style="font-family: 'Roboto', arial, sans-serif; padding-left: 25px; padding-right: 25px; position: relative">
+    <div>
+      <label>
+        <h2>
+          &ensp; {{getTitle()}}
+        </h2>
+      </label>
+    </div>
+    <span>
+      <p>
+          {{getMessage()}}
+      </p>
+    </span>
+    <br><br><br>
+    <button mat-button (click)="Cancel()"><b>CANCELAR</b></button>
+    <button mat-button color="primary" (click)="Ok()"><b>ENTENDIDO</b></button>
+</div>
