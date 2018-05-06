@@ -6,14 +6,14 @@
     [attr.role]="isHandset ? 'dialog' : 'navigation'"
     [mode]="(isHandset | async)!.matches ? 'over' : 'side'"
     [opened]="!(isHandset | async)!.matches">
-    <mat-toolbar color="primary">Menu</mat-toolbar>
+    <mat-toolbar>Mis opciones</mat-toolbar>
     <mat-nav-list>
-      <a mat-list-item routerLink="/me/home">Balance General</a>
-      <a mat-list-item routerLink="/me/ingresos">Ingresos</a>
-      <a mat-list-item routerLink="/me/egresos">Egresos</a>
-      <a mat-list-item routerLink="/me/configuracion">Configuración</a>
+      <a mat-list-item routerLink="/me/home"><i class="material-icons right">attach_money</i>Balance General</a>
+      <a mat-list-item routerLink="/me/ingresos"><i class="material-icons right">trending_up</i>Ingresos</a>
+      <a mat-list-item routerLink="/me/egresos"><i class="material-icons right">trending_down</i>Egresos</a>
+      <a mat-list-item routerLink="/me/configuracion"><i class="material-icons right">settings</i>Configuración</a>
       <mat-divider></mat-divider>
-      <a mat-list-item (click)="closeSession()">Cerrar sesión</a>
+      <a mat-list-item (click)="closeSession()"><i class="material-icons right">power_settings_new</i>Cerrar sesión</a>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
