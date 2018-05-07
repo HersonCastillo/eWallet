@@ -56,6 +56,7 @@ const appRoutes: Routes = [
     MaterialModule,
     HttpModule,
     LayoutModule,
+    ReactiveFormsModule.withConfig({warnOnNgModelWithFormControl: 'never'})
   ],
   entryComponents:[
     SimpleComponent,

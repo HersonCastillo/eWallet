@@ -20,16 +20,19 @@
     <br>
     <h2>Iniciar sesión</h2>
     <br><br>
-    <mat-form-field>
+    <mat-form-field style="width: 100%;">
       <input name="username" type="text" matInput placeholder="Usuario" [(ngModel)]="user.username" autocomplete="off">
+      <i class="material-icons" matSuffix>person</i>
+      <mat-hint>El usuario debe estar registrado con aterioridad.</mat-hint>
     </mat-form-field>
-    <br>
-    <mat-form-field>
+    <br><br>
+    <mat-form-field style="width: 100%;">
       <input name="password" type="password" matInput placeholder="Contraseña" [(ngModel)]="user.password" autocomplete="off">
+      <i class="material-icons" matSuffix>security</i>
     </mat-form-field>
     <br><br><br>
     <mat-divider></mat-divider>
-    <br>
-    <button mat-raised-button color="primary" (click)="btnLogin()">Iniciar sesión</button>
+    <br><br>
+    <a routerLink="/registrar" mat-button style="margin-right: 20px;">Crear una cuenta</a><button mat-raised-button color="primary" (click)="btnLogin()">Iniciar sesión</button>
   </form>
 </mat-card>
