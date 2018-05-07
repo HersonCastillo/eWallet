@@ -50,6 +50,37 @@ app.post('/login', (req, res, next) => {
         });
     });
 });
+app.post('/nuevousuario', (req, res, next) => {
+    MongoClient.connect(url, (err, db) => {
+        if(err) console.error(err);
+        else {
+            var $db = db.db(database);
+            var usuario = {
+                _id_: req.body._id_,
+                nombres: req.body.nombres,
+                apellidos: req.body.apellidos,
+                bancaData: {},
+                telefono: req.body.telefono,
+                direccion: req.body.direccion,
+                dui: req.body.dui,
+                nit: req.body.nit,
+                fechaNacimiento: req.body.fechaNacimiento,
+                password: sha1(req.body.password),
+                username: req.body.username
+            };
+            $db.collection(collections.Usuarios).insertOne(usuario, (err, response) => {
+                if(err) console.error(err);
+                else {
+                    res.send({
+                        success: "ok",
+                        status: 200,
+                        token: sha1(usuario.username + ':' + usuario.password)
+                    });
+                }
+            });
+        }
+    });
+});
 app.post('/validToken', (req, res, next) => {
     MongoClient.connect(url, (err, db) => {
         if(err) console.error(err);

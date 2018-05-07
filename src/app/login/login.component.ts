@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, ViewChild } from '@angular/core';
 import { LoginService } from '../services/login.service';
 import { MatDialog } from '@angular/material';
 import { SimpleComponent } from '../modals/simple/simple.component';

@@ -16,7 +16,8 @@ import {
   MatDialogModule,
   MatDatepickerModule,
   MatNativeDateModule,
-  MatSnackBarModule
+  MatSnackBarModule,
+  MatStepperModule
 } from '@angular/material';
 
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -39,7 +40,8 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     MatProgressBarModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatStepperModule
   ],
   exports: [
     MatButtonModule,
@@ -55,7 +57,8 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     MatDialogModule,
     MatProgressBarModule,
     MatDatepickerModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatStepperModule
   ],
   declarations: []
 })
