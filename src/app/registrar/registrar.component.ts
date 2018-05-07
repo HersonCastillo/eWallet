@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroupDirective, NgForm, Validators } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MatSnackBar } from '@angular/material';
+import { Router } from '@angular/router';
 import { RegistrarService } from '../services/registrar.service';
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
@@ -19,7 +20,8 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
 export class RegistrarComponent {
   minDate = new Date(1975, 0, 1);
   maxDate = new Date(2005, 0, 1);
-  constructor(private snack: MatSnackBar, private registrarProvider: RegistrarService) { }
+  constructor(private snack: MatSnackBar, private registrarProvider: RegistrarService,
+  private router: Router) { }
   isValid(object: any, str1: string, str2: string): boolean{
     return object.hasError(str1) && !object.hasError(str2);
   }
@@ -120,9 +122,25 @@ export class RegistrarComponent {
           dui: this.registroData.dui,
           nit: this.registroData.nit,
           fechaNacimiento: this.registroData.fechaNac,
-          username: this.registroData.usuario
+          username: this.registroData.usuario,
+          direccion: this.registroData.direccion,
+          telefono: this.registroData.telefono
         }).then(response => {
-          console.log(response);
+          let ff = new Date();
+          ff.setHours(ff.getHours() + 1);
+          localStorage.setItem("start_session", (new Date).toString());
+          localStorage.setItem("finish_session", ff.toString());
+          localStorage.setItem("token", response.token); //Arreglar token - Reponse
+          if(response.success){
+            this.snack.open("Bienvenido a eWallet " + this.registroData.nombres, null, {duration: 1500});
+            setTimeout(()=> {
+              this.snack.open("Aqui podrás manejar tus gastos de una manera más fácil", null, {duration: 1500});
+              setTimeout(()=> {
+                this.snack.open("Mucha suerte y gracias por preferirnos.", null, {duration: 1500});
+              }, 1500);
+            }, 1500);
+            this.router.navigateByUrl('/me');
+          } else this.router.navigateByUrl('/me');
         }).catch(err => {
           this.snack.open("Error en el servicio de registro.", null, {duration: 4000});
         });

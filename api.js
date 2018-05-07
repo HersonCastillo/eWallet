@@ -74,7 +74,7 @@ app.post('/nuevousuario', (req, res, next) => {
                     res.send({
                         success: "ok",
                         status: 200,
-                        data: response
+                        token: sha1(usuario.username + ':' + usuario.password)
                     });
                 }
             });
