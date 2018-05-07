@@ -107,7 +107,7 @@
           </mat-error>
         </mat-form-field>
         <mat-form-field style="width: 50%;">
-          <input matInput [min]="minDate" [max]="maxDate" [matDatepicker]="picker" placeholder="Escoge una fecha"
+          <input matInput [(ngModel)]="registroData.fechaNac" [min]="minDate" [max]="maxDate" [matDatepicker]="picker" placeholder="Escoge una fecha"
           [formControl]="calendario" [errorStateMatcher]="matcher">
           <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
@@ -115,6 +115,20 @@
           <mat-error *ngIf="is(calendario, 'required')">
               Ingresar una fecha válida.
           </mat-error>
+        </mat-form-field>
+        <br>
+        <mat-form-field style="width: 100%;">
+          <mat-label>Nombre de usuario</mat-label>
+          <input [(ngModel)]="registroData.usuario" matInput type="text" name="usuario" autocomplete="off"
+          [formControl]="usuario">
+          <mat-hint>Un nombre sin espacios ni carácteres especiales.</mat-hint>
+          <mat-error *ngIf="isValid(usuario, 'pattern', 'required')">
+            Ingresar un nombre de usuario válido.
+          </mat-error>
+          <mat-error *ngIf="isRequired(usuario)">
+            El nombre de usuario es <strong>requerido</strong>.
+          </mat-error>
+          <i class="material-icons" matSuffix>person</i>
         </mat-form-field>
         <br><br><br>
         <mat-divider></mat-divider>

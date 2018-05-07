@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroupDirective, NgForm, Validators } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MatSnackBar } from '@angular/material';
+import { RegistrarService } from '../services/registrar.service';
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -18,7 +19,7 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
 export class RegistrarComponent {
   minDate = new Date(1975, 0, 1);
   maxDate = new Date(2005, 0, 1);
-  constructor(private snack: MatSnackBar) { }
+  constructor(private snack: MatSnackBar, private registrarProvider: RegistrarService) { }
   isValid(object: any, str1: string, str2: string): boolean{
     return object.hasError(str1) && !object.hasError(str2);
   }
@@ -32,7 +33,8 @@ export class RegistrarComponent {
     DUI: /^[\d]{8}-[\d]{1}$/gi,
     NIT: /^[\d]{4}-[\d]{6}-[\d]{3}-[\d]{1}$/gi,
     Telefono: /^[276][\d]{3}-?[\d]{4}$/g,
-    Direccion: /^[a-zA-Z0-9\s#áéíóúÁÉÍÓÚ]{3,}$/
+    Direccion: /^[a-zA-Z0-9\s#áéíóúÁÉÍÓÚ]{3,}$/,
+    Usuario: /^[a-zA-Z0-9]{6,}$/
   };
   email = new FormControl('', [Validators.required, Validators.email]);
   dui = new FormControl('', [Validators.required, Validators.pattern(this.patterns.DUI)]);
@@ -44,6 +46,7 @@ export class RegistrarComponent {
   apellidos = new FormControl('', [Validators.required]);
   contraFirst = new FormControl('', [Validators.required]);
   contraSecond = new FormControl('', [Validators.required]);
+  usuario = new FormControl('', [Validators.required, Validators.pattern(this.patterns.Usuario)]);
 
   public registroData = {
     nombres: "",
@@ -54,9 +57,42 @@ export class RegistrarComponent {
     contra2: "",
     dui: "",
     nit: "",
-    email: ""
+    email: "",
+    fechaNac: this.maxDate,
+    usuario: ""
   };
-
+  abecedario = "abcdefghijklmnopqrstuvwxyz";
+  numeros = "0123456789";
+  generateKey(): string{
+    let firstKey:string = "";
+    let secondKey:string = "";
+    for(let i = 0; i < 9; i ++){
+      let n = Math.round(Math.random() * 26);
+      if(n >= 26) n = 0;
+      firstKey += this.abecedario[n];
+    }
+    firstKey += ":";
+    for(let i = 0; i < 9; i ++){
+      let n = Math.round(Math.random() * 10);
+      if(n >= 26) n = 0;
+      firstKey += this.numeros[n];
+    }
+    for(let i = 0; i < 9; i ++){
+      let n = Math.round(Math.random() * 26);
+      if(n >= 26) n = 0;
+      secondKey += this.numeros[n];
+    }
+    secondKey += ":";
+    for(let i = 0; i < 9; i ++){
+      let n = Math.round(Math.random() * 10);
+      if(n >= 26) n = 0;
+      secondKey += this.abecedario[n];
+    }
+    let d = new Date();
+    let thirdKey = d.getMinutes() + '->' + d.getSeconds() + '->' + d.getMilliseconds();
+    let hash = btoa(firstKey + ':' + secondKey + ':' + thirdKey);
+    return hash;
+  }
   btnRegistrar(): void{
     if(
       !this.email.hasError('required') &&
@@ -71,10 +107,25 @@ export class RegistrarComponent {
       !this.apellidos.hasError('required') &&
       !this.direccion.hasError('pattern') &&
       !this.telefono.hasError('pattern') &&
-      !this.calendario.hasError('required')
+      !this.calendario.hasError('required') &&
+      !this.usuario.hasError('required') &&
+      !this.usuario.hasError('pattern')
     ){
       if(this.registroData.contra1 === this.registroData.contra2){
-        console.log('Ward');
+        this.registrarProvider.ingresarUsuario({
+          _id_: this.generateKey(),
+          nombres: this.registroData.nombres,
+          apellidos: this.registroData.apellidos,
+          password: this.registroData.contra1,
+          dui: this.registroData.dui,
+          nit: this.registroData.nit,
+          fechaNacimiento: this.registroData.fechaNac,
+          username: this.registroData.usuario
+        }).then(response => {
+          console.log(response);
+        }).catch(err => {
+          this.snack.open("Error en el servicio de registro.", null, {duration: 4000});
+        });
       } else this.snack.open("Las contraseñas no coinciden", null, {duration: 3500});
     } else this.snack.open("Tienes campos pendientes para rellenar.", null, {duration: 3000});
   }
