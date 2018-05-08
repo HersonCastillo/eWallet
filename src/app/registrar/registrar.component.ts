@@ -132,11 +132,11 @@ export class RegistrarComponent {
           localStorage.setItem("finish_session", ff.toString());
           localStorage.setItem("token", response.token); //Arreglar token - Reponse
           if(response.success){
-            this.snack.open("Bienvenido a eWallet " + this.registroData.nombres, null, {duration: 1500});
+            this.snack.open("Bienvenido a eWallet " + this.registroData.nombres, null, {duration: 4500});
             setTimeout(()=> {
-              this.snack.open("Aqui podrás manejar tus gastos de una manera más fácil", null, {duration: 1500});
+              this.snack.open("Aqui podrás manejar tus gastos de una manera más fácil", null, {duration: 4500});
               setTimeout(()=> {
-                this.snack.open("Mucha suerte y gracias por preferirnos.", null, {duration: 1500});
+                this.snack.open("Mucha suerte y gracias por preferirnos.", null, {duration: 4500});
               }, 1500);
             }, 1500);
             this.router.navigateByUrl('/me');
