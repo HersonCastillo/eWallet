@@ -181,6 +181,7 @@ app.put('/cambiarmetodo', (req, res, next) => {
         db.close();
     });
 });
+
 app.listen(port, () => {
     console.log('Escuchando en http://localhost:' + port + ' ...');
 });

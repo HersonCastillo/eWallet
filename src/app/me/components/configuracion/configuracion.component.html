@@ -7,39 +7,77 @@
     </small><br><br>
     <mat-divider></mat-divider>
     <br>
-    <h3>Pago de forma determinada</h3>
-    <mat-form-field style="width: 100%;">
-        <mat-select (ngModelChange)="cambiarDefault($event)" placeholder="Formas de pago disponibles" [(ngModel)]="defaultPago">
-          <mat-option *ngFor="let item of opcionesPago" [value]="item.index">
-            {{item.nombre}}
-          </mat-option>
-        </mat-select>
-    </mat-form-field>
-    <br>
-    <h3>Agregar una forma de pago</h3><br>
-    <form>
+    <mat-accordion>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Cobros
+          </mat-panel-title>
+          <mat-panel-description>
+            Forma de pago por defecto
+          </mat-panel-description>
+        </mat-expansion-panel-header>
         <mat-form-field style="width: 100%;">
-            <mat-select name="tipos" placeholder="Tipo de pago" [(ngModel)]="opcionesModel">
-              <mat-option *ngFor="let p of opcionesPago" [value]="p.index">
-                {{p.nombre}}
-              </mat-option>
-            </mat-select>
-        </mat-form-field>
-        <mat-form-field style="width: 100%;" *ngIf="opcionesModel === 0">
-            <input type="number" name="cuenta" [(ngModel)]="model.cuenta" matInput placeholder="# de cuenta">
-        </mat-form-field>
-        <mat-form-field style="width: 100%;" *ngIf="opcionesModel == 1 || opcionesModel == 2">
-            <input type="text" name="tarjeta" [(ngModel)]="model.tarjeta" matInput placeholder="# de tarjeta">
-        </mat-form-field>
-        <mat-form-field style="width: 100%;">
-            <span matSuffix>$</span>
-            <input [min]="0" type="number" name="monto" [(ngModel)]="model.monto" matInput placeholder="Monto">
-        </mat-form-field>
-        <br><br>
-        <button mat-button color="primary" (click)="agregarMetodo()">
-          <i class="material-icons">add</i>&ensp;
-          Agregar método de pago
-        </button>
-    </form>
+          <mat-select (ngModelChange)="cambiarDefault($event)" placeholder="Formas de pago disponibles" [(ngModel)]="defaultPago">
+            <mat-option [disabled]="!itsSame(item.index)" *ngFor="let item of opcionesPago" [value]="item.index">
+              {{item.nombre}}
+            </mat-option>
+          </mat-select>
+      </mat-form-field>
+      </mat-expansion-panel>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Nueva método
+          </mat-panel-title>
+          <mat-panel-description>
+            Agregar un nuevo método de pago
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <form>
+          <mat-form-field style="width: 100%;">
+              <mat-select name="tipos" placeholder="Tipo de pago" [(ngModel)]="opcionesModel">
+                <mat-option [disabled]="itsSame(p.index)" *ngFor="let p of opcionesPago" [value]="p.index">
+                  {{p.nombre}}
+                </mat-option>
+              </mat-select>
+          </mat-form-field>
+          <mat-form-field style="width: 100%;" *ngIf="opcionesModel === 0">
+              <input 
+              type="number" 
+              name="cuenta" 
+              [(ngModel)]="model.cuenta" 
+              matInput 
+              autocomplete="off"
+              placeholder="# de cuenta">
+          </mat-form-field>
+          <mat-form-field style="width: 100%;" *ngIf="opcionesModel == 1 || opcionesModel == 2">
+              <input 
+              type="text" 
+              name="tarjeta" 
+              [(ngModel)]="model.tarjeta" 
+              matInput 
+              autocomplete="off"
+              placeholder="# de tarjeta">
+          </mat-form-field>
+          <mat-form-field style="width: 100%;" *ngIf="opcionesModel >= 0">
+              <span matSuffix>$</span>
+              <input 
+              [min]="0" 
+              type="number" 
+              name="monto" 
+              [(ngModel)]="model.monto" 
+              matInput 
+              autocomplete="off"
+              placeholder="Monto">
+          </mat-form-field>
+          <br><br>
+          <button mat-button color="primary" (click)="agregarMetodo()">
+            <i class="material-icons">add</i>&ensp;
+            Agregar método de pago
+          </button>
+      </form>
+      </mat-expansion-panel>
+    </mat-accordion>
   </mat-card-content>
 </mat-card>
