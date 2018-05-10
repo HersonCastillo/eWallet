@@ -38,8 +38,7 @@ export class LoginComponent {
           let last = new Date();
           last.setHours(last.getHours() + 1);
           localStorage.setItem("finish_session", last.toString());
-        }
-        else this.openDialog("Mmm...", "Algo malo ocurrió, intenta más tarde.", () => this.dialog.closeAll());
+        } else this.openDialog("Mmm...", "Algo malo ocurrió, intenta más tarde.", () => this.dialog.closeAll());
         this.loading = false;
       }).catch(error => {
         this.openDialog("¡Mal!", "Ocurrió un error al ejecutar el servicio.", () => this.dialog.closeAll());
