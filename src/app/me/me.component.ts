@@ -27,6 +27,7 @@ export class MeComponent {
       localStorage.removeItem('token');
       localStorage.removeItem('start_session');
       localStorage.removeItem('finish_session');
+      localStorage.removeItem('key');
       this.router.navigateByUrl('/login');
       this.dialog.closeAll();
     }, () => this.dialog.closeAll());

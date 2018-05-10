@@ -9,9 +9,12 @@
     <br>
     <h3>Pago de forma determinada</h3>
     <mat-form-field style="width: 100%;">
-        <mat-select placeholder="Forma de pago almacenado">
-          <mat-option>
-            1
+        <mat-select placeholder="Formas de pago disponibles" [(ngModel)]="defaultPago">
+          <mat-option [value]="-1">
+            Efectivo
+          </mat-option>
+          <mat-option *ngFor="let item of opcionesPago" [value]="item.index">
+            {{item.nombre}}
           </mat-option>
         </mat-select>
     </mat-form-field>
@@ -20,8 +23,8 @@
     <form>
         <mat-form-field style="width: 100%;">
             <mat-select name="tipos" placeholder="Tipo de pago" [(ngModel)]="opcionesModel">
-              <mat-option *ngFor="let p of opcionesPago" [value]="p.value">
-                {{p.tipo}}
+              <mat-option *ngFor="let p of opcionesPago" [value]="p.index">
+                {{p.nombre}}
               </mat-option>
             </mat-select>
         </mat-form-field>

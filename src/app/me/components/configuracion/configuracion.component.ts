@@ -1,34 +1,59 @@
-import { Component } from '@angular/core';
-
+import { Component, OnInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ConfiguracionService } from '../../../services/configuracion.service';
 @Component({
   selector: 'app-configuracion',
   templateUrl: './configuracion.component.html',
   styleUrls: ['./configuracion.component.css']
 })
-export class ConfiguracionComponent{
-  constructor() { }
+export class ConfiguracionComponent implements OnInit{
+  constructor(private snack: MatSnackBar, private conf: ConfiguracionService) { }
+  ngOnInit(): void{
+    this.conf.obtenerMetodos(localStorage.getItem('key'));
+    this.conf.obtenerTiposMetodo().then(r => {
+      this.opcionesPago = r.data;
+    });
+  }
+  makeSnack(txt: string): void{
+    this.snack.open(txt, null, {duration: 1500});
+  }
   public tarjetaReg = /^[\d]{4}-[\d]{4}-[\d]{4}-[\d]{4}$/gi;
-  public opcionesPago = [
-    { tipo: "Cuenta bancaria", value: 0 },
-    { tipo: "Tarjeta de crédito", value: 1 },
-    { tipo: "Tarjeta de débito", value: 2 }
-  ];
+  public opcionesPago = [];
+  public defaultPago = -1;
   public model = {
     cuenta: 0,
     tarjeta: "",
-    monto: 0
+    monto: 0,
+    _id_: localStorage.getItem('key')
   };
   public opcionesModel = 0;
   agregarMetodo(): void{
-    switch(this.opcionesModel){
-      case 0:{
-        console.log('cuenta')
-        break;
+    if(this.model.monto > 0){
+      switch(this.opcionesModel){
+        case 0:{
+          if(this.model.cuenta >= 1000 && this.model.cuenta <= 9999){
+            this.conf.guardarMetodo({
+              tipo: this.opcionesModel,
+              monto: this.model.monto,
+              numero: this.model.cuenta,
+              _id_: this.model._id_
+            });
+          } else this.makeSnack("El número de cuenta debe ser de 4 dígitos significativos.");
+          break;
+        }
+        case 1: case 2:{
+          let reg = new RegExp(this.tarjetaReg);
+          if(reg.exec(this.model.tarjeta)){
+            this.conf.guardarMetodo({
+              tipo: this.opcionesModel,
+              monto: this.model.monto,
+              _id_: this.model._id_,
+              numero: this.model.tarjeta
+            });
+          } else this.makeSnack("El número de tarjeta no es válido.");
+          break;
+        }
       }
-      case 1: case 2:{
-        console.log('tarjeta')
-        break;
-      }
-    }
+    } else this.makeSnack("El monto debe ser mayor de 0.");
   }
 }
