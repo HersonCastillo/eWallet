@@ -9,5 +9,6 @@ export interface Usuario {
     nit: string,
     fechaNacimiento: Date,
     password: string,
-    username: string
+    username: string,
+    email: string
 }

@@ -1,3 +1,92 @@
-<p>
-  ingresos works!
-</p>
+<mat-card>
+  <mat-card-content>
+      <h2><i class="material-icons icon-top">insert_chart</i>&ensp;Ingresos</h2>
+      <mat-divider></mat-divider>
+      <mat-tab-group>
+          <mat-tab label="Mis ingresos actuales">
+            <div class="content-tab">
+              <label>No hay datos existentes.</label>
+              <!--DataTable-->
+              <table mat-table #table [dataSource]="dataSource">
+                  <!-- Position Column -->
+                  <ng-container matColumnDef="position">
+                    <th mat-header-cell *matHeaderCellDef> No. </th>
+                    <td mat-cell *matCellDef="let element"> {{element.position}} </td>
+                  </ng-container>
+              
+                  <!-- Name Column -->
+                  <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef> Name </th>
+                    <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                  </ng-container>
+              
+                  <!-- Weight Column -->
+                  <ng-container matColumnDef="weight">
+                    <th mat-header-cell *matHeaderCellDef> Weight </th>
+                    <td mat-cell *matCellDef="let element"> {{element.weight}} </td>
+                  </ng-container>
+              
+                  <!-- Symbol Column -->
+                  <ng-container matColumnDef="symbol">
+                    <th mat-header-cell *matHeaderCellDef> Symbol </th>
+                    <td mat-cell *matCellDef="let element"> {{element.symbol}} </td>
+                  </ng-container>
+              
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+              
+                <mat-paginator #paginator
+                               [pageSize]="10"
+                               [pageSizeOptions]="[5, 10, 20]"
+                               [showFirstLastButtons]="true">
+                </mat-paginator>
+            </div>
+          </mat-tab>
+          <mat-tab label="Agregar un ingreso nuevo">
+            <div class="content-tab">
+              <form>
+                <br>
+                  <span>Rellena los campos</span><br><br>
+                  <mat-form-field style="width: 100%">
+                      <span matSuffix><i class="material-icons">attach_money</i>&nbsp;</span>
+                      <input 
+                      matInput 
+                      placeholder="Monto" 
+                      [min]="0"
+                      [(ngModel)]="ingreso.monto"
+                      name="monto"
+                      autocomplete="off"
+                      type="number">
+                  </mat-form-field>
+                  <mat-form-field style="width: 100%">
+                      <input 
+                      matInput 
+                      placeholder="Descripción del ingreso" 
+                      [(ngModel)]="ingreso.motivo"
+                      name="motivo"
+                      autocomplete="off"
+                      type="text">
+                  </mat-form-field>
+                  <mat-form-field style="width: 100%;">
+                      <input 
+                      [(ngModel)]="ingreso.fecha" 
+                      matInput 
+                      [matDatepicker]="picker" 
+                      name="fecha"
+                      autocomplete="off"
+                      placeholder="Fecha del ingreso">
+                      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                      <mat-datepicker #picker></mat-datepicker>
+                  </mat-form-field>
+                  <br><br>
+                  <button mat-button color="primary" (click)="agregarIngreso()">
+                    <i class="material-icons">add</i>&ensp;&ensp;
+                    AGREGAR INGRESO
+                  </button>
+              </form>
+            </div>
+          </mat-tab>
+      </mat-tab-group>
+  </mat-card-content>
+</mat-card>

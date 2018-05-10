@@ -11,7 +11,7 @@ export class RegistrarService {
   public ingresarUsuario(usuario: Usuario): Promise<any>{
     return new Promise((resolve, reject) => {
       this.http.post(this.globals.url + "nuevousuario", usuario)
-      .subscribe(response => resolve(response), error => reject(error));
+      .subscribe(response => resolve(response.json()), error => reject(error));
     });
   }
 }

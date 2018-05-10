@@ -6,6 +6,7 @@
 
 var MongoClient = require("mongodb").MongoClient;
 var url = "mongodb://localhost:27017";
+var port = 3500;
 var database = "tads";
 var collections = {
     Usuarios: "usuarios"
@@ -25,90 +26,48 @@ app.use(express.urlencoded());
 
 app.post('/login', (req, res, next) => {
     MongoClient.connect(url, (err, db) => {
-        if(err) console.log(err);
+        if(err) res.send({
+            error: "Ocurró un error en la conexión.",
+            mongo: err});
         var $db = db.db(database);
         $db.collection(collections.Usuarios).find({
             username: req.body.user,
             password: sha1(req.body.pass)
-        }).toArray((err, result) => {
+        }).toArray((err, response) => {
             if(err) res.send({
-                error: "El control de mongodb excedió su límite.",
-                status: 500
+                error: "Ocurrió un error al obtener las listas de -usuarios-.", 
+                mongo:err});
+            else if(response.length > 0) res.send({
+                success: "ok",
+                data: 
+                    sha1(response[0].username + 
+                        ':' + 
+                        response[0].password)
             });
-            else {
-                if(result.length > 0){
-                    res.send({
-                        success: "ok",
-                        status: 200,
-                        data: sha1(result[0].username + ':' + result[0].password)
-                    });
-                } else res.send({
-                    error: "Usuario no encontrado.",
-                    status: 200
-                })
-            }
+            else res.send({ error: "Usuario no encontrado." });
         });
     });
 });
 app.post('/nuevousuario', (req, res, next) => {
     MongoClient.connect(url, (err, db) => {
-        if(err) console.error(err);
+        if(err) res.send({
+            error: "Ocurró un error en la conexión.",
+            mongo: err});
         else {
             var $db = db.db(database);
-            var usuario = {
-                _id_: req.body._id_,
-                nombres: req.body.nombres,
-                apellidos: req.body.apellidos,
-                bancaData: {},
-                telefono: req.body.telefono,
-                direccion: req.body.direccion,
-                dui: req.body.dui,
-                nit: req.body.nit,
-                fechaNacimiento: req.body.fechaNacimiento,
-                password: sha1(req.body.password),
-                username: req.body.username
-            };
-            $db.collection(collections.Usuarios).insertOne(usuario, (err, response) => {
-                if(err) console.error(err);
-                else {
-                    res.send({
-                        success: "ok",
-                        status: 200,
-                        token: sha1(usuario.username + ':' + usuario.password)
-                    });
-                }
-            });
-        }
-    });
-});
-app.post('/validToken', (req, res, next) => {
-    MongoClient.connect(url, (err, db) => {
-        if(err) console.error(err);
-        else {
-            var $db = db.db(database);
-            var usuarios = [];
-            $db.collection(collections.Usuarios).find({}).toArray((err, response) => {
-                if(err) console.error(err);
-                else response.forEach(e => {
-                    usuarios.push(sha1(e.username + ':' + e.password));
+            req.body.password = sha1(req.body.password);
+            $db.collection(collections.Usuarios).insertOne(req.body, (err, response) => {
+                if(err) res.send({
+                    error: "Ocurrió un error al insertar el usuario.", 
+                    mongo: err});
+                else res.send({
+                    success: "ok",
+                    token: sha1(req.body.username + ':' + req.body.password)
                 });
-                if(usuarios.length > 0){
-                    let result = false;
-                    usuarios.forEach(e => {
-                        if(e == req.body.token){
-                            result = true;
-                            return;
-                        }
-                    });
-                    res.send({ auth: result });
-                } else res.send({ auth: false });
             });
         }
     });
 });
-
-const port = 3500;
-
 app.listen(port, () => {
-    console.info('Conectado en el puerto [' + port + '] ...');
+    console.log('Escuchando en http://localhost:' + port + ' ...');
 });

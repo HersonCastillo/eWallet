@@ -124,23 +124,30 @@ export class RegistrarComponent {
           fechaNacimiento: this.registroData.fechaNac,
           username: this.registroData.usuario,
           direccion: this.registroData.direccion,
-          telefono: this.registroData.telefono
+          telefono: this.registroData.telefono,
+          email: this.registroData.email
         }).then(response => {
-          let ff = new Date();
-          ff.setHours(ff.getHours() + 1);
-          localStorage.setItem("start_session", (new Date).toString());
-          localStorage.setItem("finish_session", ff.toString());
-          localStorage.setItem("token", response.token); //Arreglar token - Reponse
           if(response.success){
-            this.snack.open("Bienvenido a eWallet " + this.registroData.nombres, null, {duration: 1500});
+            let ff = new Date();
+            ff.setHours(ff.getHours() + 1);
+            localStorage.setItem("start_session", (new Date).toString());
+            localStorage.setItem("finish_session", ff.toString());
+            localStorage.setItem("token", response.token); //Arreglar token - Reponse
+            this.snack.open("Bienvenido a eWallet " + this.registroData.nombres, null, {duration: 4500});
             setTimeout(()=> {
-              this.snack.open("Aqui podrás manejar tus gastos de una manera más fácil", null, {duration: 1500});
+              this.snack.open("Aqui podrás manejar tus gastos de una manera más fácil", null, {duration: 4500});
               setTimeout(()=> {
-                this.snack.open("Mucha suerte y gracias por preferirnos.", null, {duration: 1500});
-              }, 1500);
-            }, 1500);
+                this.snack.open("Mucha suerte y gracias por preferirnos.", null, {duration: 4500});
+              }, 3500);
+            }, 3500);
             this.router.navigateByUrl('/me');
-          } else this.router.navigateByUrl('/me');
+          } else if(response.error){
+            this.snack.open("No se pudo ingresar el usuario, puede de que algún datos esté repetido dentro de nuestro servidor.", 
+            null, {duration:6500});
+          } else{
+            this.router.navigateByUrl('/login');
+            this.snack.open("Ocurrió un error en el servicio de registro.");
+          }
         }).catch(err => {
           this.snack.open("Error en el servicio de registro.", null, {duration: 4000});
         });
