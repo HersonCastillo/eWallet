@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule } 
+from '@angular/platform-browser/animations';
 
 import { 
   MatButtonModule,
@@ -18,10 +19,13 @@ import {
   MatNativeDateModule,
   MatSnackBarModule,
   MatStepperModule,
-  MatTooltipModule
+  MatTooltipModule,
+  MatTableModule,
+  MatPaginatorModule
 } from '@angular/material';
 
-import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatProgressBarModule } 
+from '@angular/material/progress-bar';
 
 @NgModule({
   imports: [
@@ -43,7 +47,9 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     MatNativeDateModule,
     MatSnackBarModule,
     MatStepperModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatTableModule,
+    MatPaginatorModule
   ],
   exports: [
     MatButtonModule,
@@ -61,7 +67,9 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     MatDatepickerModule,
     MatSnackBarModule,
     MatStepperModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatTableModule,
+    MatPaginatorModule
   ],
   declarations: []
 })
