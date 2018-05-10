@@ -9,10 +9,7 @@
     <br>
     <h3>Pago de forma determinada</h3>
     <mat-form-field style="width: 100%;">
-        <mat-select placeholder="Formas de pago disponibles" [(ngModel)]="defaultPago">
-          <mat-option [value]="-1">
-            Efectivo
-          </mat-option>
+        <mat-select (ngModelChange)="cambiarDefault($event)" placeholder="Formas de pago disponibles" [(ngModel)]="defaultPago">
           <mat-option *ngFor="let item of opcionesPago" [value]="item.index">
             {{item.nombre}}
           </mat-option>
@@ -31,7 +28,7 @@
         <mat-form-field style="width: 100%;" *ngIf="opcionesModel === 0">
             <input type="number" name="cuenta" [(ngModel)]="model.cuenta" matInput placeholder="# de cuenta">
         </mat-form-field>
-        <mat-form-field style="width: 100%;" *ngIf="opcionesModel >= 1">
+        <mat-form-field style="width: 100%;" *ngIf="opcionesModel == 1 || opcionesModel == 2">
             <input type="text" name="tarjeta" [(ngModel)]="model.tarjeta" matInput placeholder="# de tarjeta">
         </mat-form-field>
         <mat-form-field style="width: 100%;">

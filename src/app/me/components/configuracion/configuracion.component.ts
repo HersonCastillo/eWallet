@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConfiguracionService } from '../../../services/configuracion.service';
 @Component({
@@ -9,17 +9,26 @@ import { ConfiguracionService } from '../../../services/configuracion.service';
 export class ConfiguracionComponent implements OnInit{
   constructor(private snack: MatSnackBar, private conf: ConfiguracionService) { }
   ngOnInit(): void{
-    this.conf.obtenerMetodos(localStorage.getItem('key'));
+    //this.conf.obtenerMetodos(localStorage.getItem('key'));
     this.conf.obtenerTiposMetodo().then(r => {
       this.opcionesPago = r.data;
+    });
+    this.conf.myInfo(localStorage.getItem('key')).then(r => {
+      this.defaultPago = r.data.cobro;
     });
   }
   makeSnack(txt: string): void{
     this.snack.open(txt, null, {duration: 1500});
   }
+  cambiarDefault(e: any): void{
+    let key = localStorage.getItem('key');
+    this.conf.cambioCobro(key, e).then(r => {
+      console.log(r)
+    });
+  }
   public tarjetaReg = /^[\d]{4}-[\d]{4}-[\d]{4}-[\d]{4}$/gi;
   public opcionesPago = [];
-  public defaultPago = -1;
+  public defaultPago = 3;
   public model = {
     cuenta: 0,
     tarjeta: "",

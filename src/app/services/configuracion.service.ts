@@ -26,4 +26,19 @@ export class ConfiguracionService {
       .subscribe(r => resolve(r.json()), err => reject(err));
     });
   }
+  myInfo(id: string): Promise<any>{
+    return new Promise((resolve, reject) => {
+      this.http.put(this.globals.url + "info", {
+        _id_: id
+      }).subscribe(r => resolve(r.json()), err => reject(err));
+    });
+  }
+  cambioCobro(id: string, idC: number): Promise<any>{
+    return new Promise((resolve, reject) => {
+      this.http.put(this.globals.url + "cambiarmetodo", {
+        _id_: id,
+        cobro: idC
+      }).subscribe(r => resolve(r.json()), err => reject(err));
+    });
+  }
 }

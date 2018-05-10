@@ -50,6 +50,7 @@ app.post('/login', (req, res, next) => {
             });
             else res.send({ error: "Usuario no encontrado." });
         });
+        db.close();
     });
 });
 app.post('/nuevousuario', (req, res, next) => {
@@ -71,6 +72,7 @@ app.post('/nuevousuario', (req, res, next) => {
                 });
             });
         }
+        db.close();
     });
 });
 app.post('/agregarmetodo', (req, res, next) => {
@@ -90,6 +92,7 @@ app.post('/agregarmetodo', (req, res, next) => {
                 });
             });
         }
+        db.close();
     });
 });
 app.put('/metodos', (req, res, next) => {
@@ -111,6 +114,7 @@ app.put('/metodos', (req, res, next) => {
                 });
             });
         }
+        db.close();
     });
 });
 app.get('/tiposmetodo', (req, res, next) => {
@@ -130,6 +134,51 @@ app.get('/tiposmetodo', (req, res, next) => {
                 });
             });
         }
+        db.close();
+    });
+});
+app.put('/info', (req, res, next) => {
+    MongoClient.connect(url, (err, db) => {
+        if(err) res.send({
+            error: "Ocurrió un error en la conexión.",
+            mongo: err});
+        else {
+            var $db = db.db(database);
+            $db.collection(collections.Usuarios).findOne({
+                _id_: req.body._id_
+            }, (err, response) => {
+                if(err) res.send({
+                    error: "No se encontraron resultados.",
+                    mongo: err});
+                else res.send({
+                    success: "ok",
+                    data: response
+                });
+            });
+        }
+        db.close();
+    });
+});
+app.put('/cambiarmetodo', (req, res, next) => {
+    MongoClient.connect(url, (err, db) => {
+        if(err) res.send({
+            error: "Ocurrió un error en la conexión.",
+            mongo: err});
+        else {
+            var $db = db.db(database);
+            $db.collection(collections.Usuarios).updateOne({
+                _id_: req.body._id_
+            }, { $set: { cobro: req.body.cobro } }, (err, response) => {
+                if(err) res.send({
+                    error: "No se pudo asignar al nuevo método de cobro.",
+                    mongo: err});
+                else res.send({
+                    success: "ok",
+                    data: response
+                });
+            });
+        }
+        db.close();
     });
 });
 app.listen(port, () => {
