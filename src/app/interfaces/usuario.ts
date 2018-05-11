@@ -10,5 +10,6 @@ export interface Usuario {
     fechaNacimiento: Date,
     password: string,
     username: string,
-    email: string
+    email: string,
+    cobro: number
 }

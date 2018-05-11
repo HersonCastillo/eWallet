@@ -114,8 +114,9 @@ export class RegistrarComponent {
       !this.usuario.hasError('pattern')
     ){
       if(this.registroData.contra1 === this.registroData.contra2){
+        let key = this.generateKey();
         this.registrarProvider.ingresarUsuario({
-          _id_: this.generateKey(),
+          _id_: key,
           nombres: this.registroData.nombres,
           apellidos: this.registroData.apellidos,
           password: this.registroData.contra1,
@@ -125,7 +126,8 @@ export class RegistrarComponent {
           username: this.registroData.usuario,
           direccion: this.registroData.direccion,
           telefono: this.registroData.telefono,
-          email: this.registroData.email
+          email: this.registroData.email,
+          cobro: 3
         }).then(response => {
           if(response.success){
             let ff = new Date();
@@ -133,6 +135,7 @@ export class RegistrarComponent {
             localStorage.setItem("start_session", (new Date).toString());
             localStorage.setItem("finish_session", ff.toString());
             localStorage.setItem("token", response.token); //Arreglar token - Reponse
+            localStorage.setItem("key", key);
             this.snack.open("Bienvenido a eWallet " + this.registroData.nombres, null, {duration: 4500});
             setTimeout(()=> {
               this.snack.open("Aqui podrás manejar tus gastos de una manera más fácil", null, {duration: 4500});

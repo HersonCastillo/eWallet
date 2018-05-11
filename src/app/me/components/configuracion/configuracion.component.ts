@@ -1,34 +1,123 @@
-import { Component } from '@angular/core';
-
+import { Component, OnInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ConfiguracionService } from '../../../services/configuracion.service';
 @Component({
   selector: 'app-configuracion',
   templateUrl: './configuracion.component.html',
   styleUrls: ['./configuracion.component.css']
 })
-export class ConfiguracionComponent{
-  constructor() { }
-  public tarjetaReg = /^[\d]{4}-[\d]{4}-[\d]{4}-[\d]{4}$/gi;
-  public opcionesPago = [
-    { tipo: "Cuenta bancaria", value: 0 },
-    { tipo: "Tarjeta de crédito", value: 1 },
-    { tipo: "Tarjeta de débito", value: 2 }
-  ];
-  public model = {
+export class ConfiguracionComponent implements OnInit{
+  constructor(
+    private snack: MatSnackBar, 
+    private conf: ConfiguracionService) { }
+  ngOnInit(): void{
+    this.conf.obtenerMetodos(localStorage.getItem('key')).then(r => {
+      this.mismetodos = r.data;
+    });
+    this.conf.obtenerTiposMetodo().then(r => {
+      this.opcionesPago = r.data;
+    });
+    this.conf.myInfo(localStorage.getItem('key')).then(r => {
+      this.defaultPago = r.data.cobro;
+    });
+  }
+  itsSame(code: number): boolean{
+    let result: boolean = false;
+    this.mismetodos.forEach(e => {
+      if(e.tipo === code){
+        result = true;
+        return;
+      }
+    });
+    return result;
+  }
+  makeSnack(txt: string): void{
+    this.snack.open(txt, null, {duration: 1500});
+  }
+  cambiarDefault(e: any): void{
+    let key = localStorage.getItem('key');
+    this.conf.cambioCobro(key, e).then(r => {
+      console.log(r)
+    });
+  }
+  public tarjetaReg: any = /^[\d]{4}-[\d]{4}-[\d]{4}-[\d]{4}$/gi;
+  public opcionesPago: Array<any> = [];
+  public mismetodos: Array<any> = [];
+  public defaultPago: number = 3;
+  public model: any = {
     cuenta: 0,
     tarjeta: "",
-    monto: 0
+    monto: 0,
+    _id_: localStorage.getItem('key')
   };
-  public opcionesModel = 0;
+  public opcionesModel = -1;
   agregarMetodo(): void{
-    switch(this.opcionesModel){
-      case 0:{
-        console.log('cuenta')
-        break;
-      }
-      case 1: case 2:{
-        console.log('tarjeta')
-        break;
-      }
+    if(this.opcionesModel === -1){
+      this.makeSnack("No se ha elegido un tipo de gasto válido.");
+      return;
     }
+    if(this.model.monto > 0){
+      switch(this.opcionesModel){
+        case 0:{
+          if(this.model.cuenta >= 1000 && this.model.cuenta <= 9999){
+            this.conf.guardarMetodo({
+              tipo: this.opcionesModel,
+              monto: this.model.monto,
+              numero: this.model.cuenta,
+              _id_: this.model._id_
+            }).then(r => {
+              if(r.success) this.makeSnack(r.success);
+              else if(r.error) this.makeSnack(r.error);
+              this.model.monto = 0;
+              this.model.cuenta = 0;
+              this.model.tarjeta = "";
+            }).catch(e => {
+              this.makeSnack("No se pudo agregar el método debido al servicio.");
+            });
+          } else this.makeSnack("El número de cuenta debe ser de 4 dígitos significativos.");
+          break;
+        }
+        case 1: case 2:{
+          let reg = new RegExp(this.tarjetaReg);
+          if(reg.exec(this.model.tarjeta)){
+            this.conf.guardarMetodo({
+              tipo: this.opcionesModel,
+              monto: this.model.monto,
+              _id_: this.model._id_,
+              numero: this.model.tarjeta
+            }).then(r => {
+              if(r.success) this.makeSnack(r.success);
+              else if(r.error) this.makeSnack(r.error);
+              this.model.monto = 0;
+              this.model.cuenta = 0;
+              this.model.tarjeta = "";
+            }).catch(e => {
+              this.makeSnack("No se pudo agregar el método debido al servicio.");
+            });
+          } else this.makeSnack("El número de tarjeta no es válido.");
+          break;
+        }
+        case 3: {
+          this.conf.guardarMetodo({
+            tipo: this.opcionesModel,
+            monto: this.model.monto,
+            numero: null,
+            _id_: this.model._id_
+          }).then(r => {
+            if(r.success) this.makeSnack(r.success);
+            else if(r.error) this.makeSnack(r.error);
+            this.model.monto = 0;
+            this.model.cuenta = 0;
+            this.model.tarjeta = "";
+          }).catch(e => {
+            this.makeSnack("No se pudo agregar el método debido al servicio.");
+          });
+          break;
+        }
+        default:
+          this.makeSnack("No se ha elegido un tipo de gasto válido.");
+          break;
+      }
+    } else this.makeSnack("El monto debe ser mayor de 0.");
   }
 }

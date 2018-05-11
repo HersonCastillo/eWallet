@@ -34,6 +34,7 @@ export class LoginComponent {
         else if(response.success){
           this.router.navigateByUrl('/me');
           localStorage.setItem("token", response.data);
+          localStorage.setItem("key", response.key);
           localStorage.setItem("start_session", (new Date()).toString());
           let last = new Date();
           last.setHours(last.getHours() + 1);
