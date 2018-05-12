@@ -41,4 +41,12 @@ export class ConfiguracionService {
       }).subscribe(r => resolve(r.json()), err => reject(err));
     });
   }
+  eliminarMetodo(id: string, idM: number): Promise<any>{
+    return new Promise((resolve, reject) => {
+      this.http.post(this.globals.url + "eliminarmetodo", {
+        _id_: id,
+        index: idM
+      }).subscribe(s => resolve(s.json()), err => reject(err));
+    });
+  }
 }

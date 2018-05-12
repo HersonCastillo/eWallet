@@ -181,7 +181,28 @@ app.put('/cambiarmetodo', (req, res, next) => {
         db.close();
     });
 });
-
+app.post('/eliminarmetodo', (req, res, next) => {
+    MongoClient.connect(url, (err, db) => {
+        if(err) res.send({
+            error: "Error al conectar con la base de datos.",
+            mongo: err});
+        else {
+            var $db = db.db(database);
+            $db.collection(collections.Metodos).deleteOne({
+                _id_: req.body._id_,
+                tipo: req.body.index
+            }, (err, response) => {
+                if(err) res.send({
+                    error: "No se encontró ninguna coincidencia del método para este usuario.",
+                    mongo: err});
+                else res.send({
+                    success: "ok"
+                });
+            });
+            db.close();
+        }
+    });
+});
 app.listen(port, () => {
     console.log('Escuchando en http://localhost:' + port + ' ...');
 });

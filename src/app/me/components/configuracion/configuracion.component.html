@@ -78,6 +78,60 @@
           </button>
       </form>
       </mat-expansion-panel>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Métodos almacenados
+          </mat-panel-title>
+          <mat-panel-description>
+            Verficar mis métodos
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <mat-chip-list style="width: 100%;">
+          <mat-chip 
+          *ngFor="let chip of opcionesPago" 
+          selected="true" 
+          [removable]="true"
+          [disabled]="!itsSame(chip.index)"
+          color="{{!itsSame(chip.index) ? 'primary' : 'accent'}}"
+          (removed)="quit(chip.index)">
+            {{chip.nombre}} 
+            <i 
+            matChipRemove 
+            *ngIf="itsSame(chip.index)" 
+            class="material-icons"
+            style="transform: scale(.8,.8);
+            top:-2px;
+            position:relative;
+            left: -2px;"
+            >cancel</i>
+          </mat-chip>
+        </mat-chip-list>
+      </mat-expansion-panel>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Información personal
+          </mat-panel-title>
+          <mat-panel-description>
+            Sobre la manipulación de mi información
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <b>Aviso legal</b>
+        <p>
+          El Aviso Legal relativo a este blog describe el propósito del mismo y cumple con la legislación vigente respeto a la Ley de la Sociedad de la Información y el Comercio Electrónico (LSSI) que obliga a incluir el Aviso legal y condiciones de uso, la Política de cookies y la Política de privacidad
+          Este documento resulta aplicable a la información y contenidos de poderymanipulacion.com, en adelante PODERYMANIPULACION, ya que para la publicación de contenidos por parte de terceros se aplicarán además y preferentemente las Condiciones de Uso correspondientes.
+        </p>
+        <br><br>
+        <b>Condiciones de uso</b>
+        <p>
+          Las presentes condiciones generales de uso del portal regulan el acceso y la utilización del portal, incluyendo los contenidos y los servicios puestos a disposición de los usuarios en y/o a través del portal, bien por el portal, bien por sus usuarios, bien por terceros. No obstante, el acceso y la utilización de ciertos contenidos y/o servicios puede encontrarse sometido a determinadas condiciones específicas.
+        </p>
+        <p>
+          El usuario deberá respetar en todo momento los términos y condiciones establecidos en las presentes condiciones generales de uso del portal. De forma expresa el usuario manifiesta que utilizará el portal de forma diligente y asumiendo cualquier responsabilidad que pudiera derivarse del incumplimiento de las normas.
+          Así mismo, el usuario no podrá utilizar el portal para transmitir, almacenar, divulgar promover o distribuir datos o contenidos que sean portadores de virus o cualquier otro código informático, archivos o programas diseñados para interrumpir, destruir o perjudicar el funcionamiento de cualquier programa o equipo informático o de telecomunicaciones.
+        </p>
+      </mat-expansion-panel>
     </mat-accordion>
   </mat-card-content>
 </mat-card>

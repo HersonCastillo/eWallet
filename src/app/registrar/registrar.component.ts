@@ -127,7 +127,7 @@ export class RegistrarComponent {
           direccion: this.registroData.direccion,
           telefono: this.registroData.telefono,
           email: this.registroData.email,
-          cobro: 3
+          cobro: -1
         }).then(response => {
           if(response.success){
             let ff = new Date();
