@@ -21,7 +21,7 @@ export class EgresosComponent implements OnInit {
     motivo: ""
   };
   public maxDate = new Date();
-  private defaultPago:number = -1;
+  public defaultPago:number = -1;
   public dataEgresos: Array<any> = [];
   public displayedColumns = ['fecha', 'monto', 'descripcion'];
   public dataSource = new MatTableDataSource<Element>();
