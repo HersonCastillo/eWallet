@@ -49,4 +49,12 @@ export class ConfiguracionService {
       }).subscribe(s => resolve(s.json()), err => reject(err));
     });
   }
+  obtenerMonto(id: string, tipo: number): Promise<any>{
+    return new Promise((resolve, reject) => {
+      this.http.post(this.globals.url + "monto", {
+        _id_: id,
+        tipo: tipo
+      }).subscribe(r => resolve(r.json()), err => reject(err));
+    });
+  }
 }

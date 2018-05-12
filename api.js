@@ -1,6 +1,7 @@
 /**
  * @name MongoClient
  * @description Conexión general al sistema de mongodb
+ * @requires mongodb,express,js-sha1
  */
 "use strict";
 
@@ -280,6 +281,27 @@ app.post('/egresos', (req, res, next) => {
                     data: response
                 });
             });
+        }
+    });
+});
+app.post('/monto', (req, res, next) => {
+    MongoClient.connect(url, (err, db) => {
+        if(err) res.send({error:"Ocurrió un error en la conexión a la base de datos",
+        mongo:err});
+        else {
+            var $db = db.db(database);
+            $db.collection(collections.Metodos).findOne({
+                _id_: req.body._id_,
+                tipo: req.body.tipo
+            }, (err, response) => {
+                if(err) res.send({error:"Error al encontrar el monto del usuario.",
+                mongo:err});
+                else res.send({
+                    success:"ok",
+                    monto: response.monto ? response.monto : 0
+                });
+            });
+            db.close();
         }
     });
 });

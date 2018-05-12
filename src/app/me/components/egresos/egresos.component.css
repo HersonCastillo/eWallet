@@ -5,3 +5,10 @@
 .content-tab{
     padding: 10px;
 }
+.table-notation{
+    display: flex;
+    flex-direction: column;
+    max-height: 500px;
+    min-width: 300px;
+    overflow: auto;
+}
