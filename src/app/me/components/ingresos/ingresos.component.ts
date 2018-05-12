@@ -20,7 +20,7 @@ export class IngresosComponent implements OnInit {
   };
   public maxDate = new Date();
   public defaultPago:number = -1;
-  private dataIngresos: Array<any> = [];
+  public dataIngresos: Array<any> = [];
   public displayedColumns = ['fecha', 'monto', 'descripcion'];
   public dataSource = new MatTableDataSource<Element>();
   ngOnInit(): void{
