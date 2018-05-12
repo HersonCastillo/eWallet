@@ -157,6 +157,7 @@ export class ConfiguracionComponent implements OnInit{
           this.makeSnack("No se ha elegido un tipo de gasto válido.");
           break;
       }
+      this.opcionesModel = -1;
     } else this.makeSnack("El monto debe ser mayor de 0.");
   }
 }

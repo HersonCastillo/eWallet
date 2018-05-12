@@ -1,6 +1,7 @@
 /**
  * @name MongoClient
  * @description Conexión general al sistema de mongodb
+ * @requires mongodb,express,js-sha1
  */
 "use strict";
 
@@ -11,8 +12,10 @@ var database = "tads";
 var collections = {
     Usuarios: "usuarios",
     Metodos: "metodos",
-    TipoMetodos: "tipometodos"
-}
+    TipoMetodos: "tipometodos",
+    Ingresos: "ingresos",
+    Egresos: "egresos"
+};
 var express = require("express");
 var sha1 = require('js-sha1');
 var app = express();
@@ -197,6 +200,105 @@ app.post('/eliminarmetodo', (req, res, next) => {
                     mongo: err});
                 else res.send({
                     success: "ok"
+                });
+            });
+            db.close();
+        }
+    });
+});
+app.post('/nuevoingreso', (req, res, next) => {
+    MongoClient.connect(url, (err, db) => {
+        if(err) res.send({
+            error: "Error al conectar con la base de datos.",
+            mongo: err});
+        else {
+            var $db = db.db(database);
+            $db.collection(collections.Ingresos).insertOne(req.body, 
+            (err, response) => {
+                if(err) res.send({
+                    error: "Error al almacenar el ingreso.",
+                    mongo: err});
+                else res.send({
+                    success: "Ingreso agregado con éxito."
+                });
+            });
+            db.close();
+        }
+    });
+});
+app.post('/ingresos', (req, res, next) => {
+    MongoClient.connect(url, (err, db) => {
+        if(err) res.send({
+            error: "No se pudo conectar a la base de datos.",
+            mongo: err});
+        else {
+            var $db = db.db(database);
+            $db.collection(collections.Ingresos).find({
+                _id_: req.body._id_
+            }).toArray((err, response) => {
+                if(err) res.send({
+                    error: "No se encontró nada en los ingresos.",
+                    mongo: err});
+                else res.send({
+                    success: "ok",
+                    data: response
+                });
+            });
+            db.close();
+        }
+    });
+});
+app.post('/nuevoegreso', (req, res, next) => {
+    MongoClient.connect(url, (err, db) => {
+        if(err) res.send({error:"Ocurrió un error al conectarse a la base de datos.",
+        mongo:err});
+        else {
+            var $db = db.db(database);
+            $db.collection(collections.Egresos).insertOne(req.body, 
+            (err, response) => {
+                if(err) res.send({error:"No se pudo insertar el egreso.",
+                mongo:err});
+                else res.send({
+                    success:"ok"
+                });
+            });
+        }
+    });
+});
+app.post('/egresos', (req, res, next) => {
+    MongoClient.connect(url, (err, db) => {
+        if(err) res.send({error:"Ocurrió un error al conectarse con la base de datos.",
+        mongo: err});
+        else {
+            var $db = db.db(database);
+            $db.collection(collections.Egresos).find({
+                _id_: req.body._id_
+            }).toArray((err, response) => {
+                if(err) res.send({error:"No se encontraron resultados de egresos.",
+                mongo:err});
+                else res.send({
+                    success:"ok",
+                    data: response
+                });
+            });
+        }
+    });
+});
+app.post('/monto', (req, res, next) => {
+    MongoClient.connect(url, (err, db) => {
+        if(err) res.send({error:"Ocurrió un error en la conexión a la base de datos",
+        mongo:err});
+        else {
+            var $db = db.db(database);
+            $db.collection(collections.Metodos).findOne({
+                _id_: req.body._id_,
+                tipo: req.body.tipo
+            }, (err, response) => {
+                if(err) res.send({error:"Error al encontrar el monto del usuario.",
+                mongo:err});
+                else res.send({
+                    success:"ok",
+                    monto: response.monto ? response.monto : 0
                 });
             });
             db.close();

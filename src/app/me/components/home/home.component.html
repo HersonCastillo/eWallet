@@ -1,3 +1,29 @@
-<mat-card>
+<mat-card style="position: relative;">
   <h2>Balance General</h2>
+  <mat-divider></mat-divider>
+  <br>
+  <canvas baseChart height="100"
+                [datasets]="lineChartData"
+                [options]="lineChartOptions"
+                [colors]="lineChartColors"
+                [legend]="lineChartLegend"
+                [chartType]="lineChartType"></canvas>
+  <small><b>*</b> Datos no especificamente concretos, solo muestran un estimado de comparación entre los mejores egresos con los ingresos aleatorios.
+  </small><br>
+  <br><mat-divider></mat-divider><br>
+  <small>Mis ingresos generales</small><h2 style="color:green">${{Ingresos}}</h2>
+  <small>Mis egresos generales</small><h2 style="color:#d55">${{Egresos}}</h2>
+  <div *ngIf="metodoPago >= 0" style="position: absolute;
+  bottom: 20px; 
+  right: 60px;">
+    <small>Valor total</small>
+    <h1 [style.color]="getGeneralColor(Ingresos, Egresos)">${{Ingresos - Egresos}}</h1>
+    <small><b style="color: green;">+${{montoDefault}}</b> del método de pago</small>
+    <h3 [style.color]="getGeneralColor(Ingresos, Egresos, montoDefault)">${{(Ingresos - Egresos) + montoDefault}}</h3>
+    <span><small>ESTADO</small> </span> 
+    <label style="color:green;" *ngIf="estadoFinal(Ingresos, Egresos, montoDefault) === 1"><b> ESTABLE</b></label>
+    <label style="color:orange;" *ngIf="estadoFinal(Ingresos, Egresos, montoDefault) === 0"><b> DECENTE</b></label>
+    <label style="color:#d55;" *ngIf="estadoFinal(Ingresos, Egresos, montoDefault) === -1"><b> CRÍTICO</b></label>
+  </div>
+  <br>
 </mat-card>
