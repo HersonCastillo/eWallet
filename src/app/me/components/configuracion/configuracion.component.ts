@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSnackBar, MatDialog } from '@angular/material';
+import { ConfirmComponent } from '../../../modals/confirm/confirm.component';
+import { SimpleComponent } from '../../../modals/simple/simple.component';
 import { ConfiguracionService } from '../../../services/configuracion.service';
 @Component({
   selector: 'app-configuracion',
@@ -9,17 +11,45 @@ import { ConfiguracionService } from '../../../services/configuracion.service';
 export class ConfiguracionComponent implements OnInit{
   constructor(
     private snack: MatSnackBar, 
-    private conf: ConfiguracionService) { }
+    private conf: ConfiguracionService,
+    private dialog: MatDialog) { }
   ngOnInit(): void{
     this.conf.obtenerMetodos(localStorage.getItem('key')).then(r => {
       this.mismetodos = r.data;
+    }).catch(() => {
+      SimpleComponent.setMessage("¡Mal!", "El servicio no funciona, intenta más tarde.", () => {
+        this.dialog.closeAll();
+      });
+      this.dialog.open(SimpleComponent);
     });
     this.conf.obtenerTiposMetodo().then(r => {
       this.opcionesPago = r.data;
+    }).catch(() => {
+      SimpleComponent.setMessage("¡Mal!", "El servicio no funciona, intenta más tarde.", () => {
+        this.dialog.closeAll();
+      });
+      this.dialog.open(SimpleComponent);
     });
     this.conf.myInfo(localStorage.getItem('key')).then(r => {
       this.defaultPago = r.data.cobro;
+    }).catch(() => {
+      SimpleComponent.setMessage("¡Mal!", "El servicio no funciona, intenta más tarde.", () => {
+        this.dialog.closeAll();
+      });
+      this.dialog.open(SimpleComponent);
     });
+  }
+  quit(e: any): void{
+    if(e !== this.defaultPago){
+      ConfirmComponent.setMessage("¡Espera un momento!", "¿Estás seguro de que deseas borrar este elemento?", () => {
+        this.conf.eliminarMetodo(localStorage.getItem('key'), e).then(r => {
+          if(r.success) this.makeSnack("Método eliminado con éxito.");
+          this.ngOnInit();
+        });
+        this.dialog.closeAll();
+      }, () => this.dialog.closeAll());
+      this.dialog.open(ConfirmComponent);
+    } else this.makeSnack("No puedes eliminar el método que posees por defecto.");
   }
   itsSame(code: number): boolean{
     let result: boolean = false;
@@ -37,7 +67,7 @@ export class ConfiguracionComponent implements OnInit{
   cambiarDefault(e: any): void{
     let key = localStorage.getItem('key');
     this.conf.cambioCobro(key, e).then(r => {
-      console.log(r)
+      if(r.success) this.makeSnack("Método cambiado con éxito.");
     });
   }
   public tarjetaReg: any = /^[\d]{4}-[\d]{4}-[\d]{4}-[\d]{4}$/gi;
@@ -66,7 +96,10 @@ export class ConfiguracionComponent implements OnInit{
               numero: this.model.cuenta,
               _id_: this.model._id_
             }).then(r => {
-              if(r.success) this.makeSnack(r.success);
+              if(r.success){
+                this.makeSnack(r.success);
+                this.ngOnInit();
+              }
               else if(r.error) this.makeSnack(r.error);
               this.model.monto = 0;
               this.model.cuenta = 0;
@@ -86,7 +119,10 @@ export class ConfiguracionComponent implements OnInit{
               _id_: this.model._id_,
               numero: this.model.tarjeta
             }).then(r => {
-              if(r.success) this.makeSnack(r.success);
+              if(r.success){
+                this.makeSnack(r.success);
+                this.ngOnInit();
+              }
               else if(r.error) this.makeSnack(r.error);
               this.model.monto = 0;
               this.model.cuenta = 0;
@@ -104,7 +140,10 @@ export class ConfiguracionComponent implements OnInit{
             numero: null,
             _id_: this.model._id_
           }).then(r => {
-            if(r.success) this.makeSnack(r.success);
+            if(r.success){
+              this.makeSnack(r.success);
+              this.ngOnInit();
+            }
             else if(r.error) this.makeSnack(r.error);
             this.model.monto = 0;
             this.model.cuenta = 0;
