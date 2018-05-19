@@ -6,7 +6,10 @@
     [attr.role]="isHandset ? 'dialog' : 'navigation'"
     [mode]="(isHandset | async)!.matches ? 'over' : 'side'"
     [opened]="!(isHandset | async)!.matches">
-    <mat-toolbar>Mis opciones</mat-toolbar>
+    <mat-toolbar>
+      <i class="material-icons right">bar_chart</i>
+      Dashboard
+    </mat-toolbar>
     <mat-nav-list>
       <a mat-list-item routerLink="/me/home"><i class="material-icons right">attach_money</i>Balance General</a>
       <a mat-list-item routerLink="/me/ingresos"><i class="material-icons right">trending_up</i>Ingresos</a>
